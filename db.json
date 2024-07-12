@@ -1,5 +1,30 @@
 {
-    "users":[],
-    "album":[],
-    "photos":[]
+  "users": [
+    {
+      "id": 1,
+      "name": "Rabia"
+    },
+    {
+      "id": "9e5d",
+      "name": "Mack Wisoky III"
+    },
+    {
+      "id": "e379",
+      "name": "Keith Gutkowski"
+    },
+    {
+      "id": "902d",
+      "name": "Don Moen"
+    },
+    {
+      "id": "77e5",
+      "name": "Deanna Hartmann"
+    },
+    {
+      "id": "78b0",
+      "name": "Kristin Schowalter"
+    }
+  ],
+  "album": [],
+  "photos": []
 }
