@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers, addUser } from "../store";
 import Skeleton from "./Skeleton";
 import Button from "./Button";
-const useThunk=(thunk)=>{
-    const[isLoading, setIsLoading]=useState(false);
-    const [error, setError]=useState(null);
-
-}
+const useThunk = (thunk) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const runThunk = useCallback(()  => {
+    setIsLoading(true);
+    dispatch(thunk())
+      .unwrap()
+      .catch((err) => setError(error))
+      .finally(() => setIsLoading(false));
+  },[dispatch,thunk]);
+  return [runThunk, isLoading, error];
+};
 
 const UsersList = () => {
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
@@ -67,7 +75,7 @@ const UsersList = () => {
         )}
         {creatingUserError && "Error creating User..."}
       </div>
-      {renderedUsers }
+      {renderedUsers}
     </div>
   );
 };
