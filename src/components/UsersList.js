@@ -7,47 +7,29 @@ const useThunk = (thunk) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const runThunk = useCallback(()  => {
+  const runThunk = useCallback(() => {
     setIsLoading(true);
     dispatch(thunk())
       .unwrap()
       .catch((err) => setError(error))
       .finally(() => setIsLoading(false));
-  },[dispatch,thunk]);
+  }, [dispatch, thunk]);
   return [runThunk, isLoading, error];
 };
 
 const UsersList = () => {
-  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
-  const [loadingUsersError, setLoadingUsersError] = useState(null);
-  const [creatingUser, setCreatingUser] = useState(false);
-  const [creatingUserError, setCreatingUserError] = useState(null);
-  const dispatch = useDispatch();
+  const [doFetchUsers, isLoadingUsers, loadingUsersError] =
+    useThunk(fetchUsers);
+  const [doCreateUser, creatingUser, creatingUserError] = useThunk(addUser);
   const { data } = useSelector((state) => {
     return state.users;
   });
 
   useEffect(() => {
-    setIsLoadingUsers(true);
-    dispatch(fetchUsers())
-      .unwrap()
-      .catch((err) => {
-        setLoadingUsersError(err);
-      })
-      .finally(() => {
-        setIsLoadingUsers(false);
-      });
-  }, [dispatch]);
+    doFetchUsers();
+  }, [doFetchUsers]);
   const handleUserAdd = () => {
-    setCreatingUser(true);
-    dispatch(addUser())
-      .unwrap()
-      .catch((err) => {
-        setCreatingUserError(err);
-      })
-      .finally(() => {
-        setCreatingUser(false);
-      });
+    doCreateUser();
   };
   if (isLoadingUsers) {
     return <Skeleton times={8} className="h-10 w-full" />;
